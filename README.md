@@ -56,7 +56,23 @@ When Eureka first starts up without peer Eureka servers, it waits for all client
 
 `prefer-ip-address= true` forces the clients to register with an ip address instead of a host name
 
-# Monitoring Micro Service as Eureka Client
+# Starting up SpringBoot application as Eureka Client
+
+@EnableEurekaClient annotation should be added next to @SpringBootApplication annotation on the Main class the SpringBoot application which owns main() function. Maven file for reference can be found in the repository in order to build and run Eureka Server. I used version Greenwich.SR3 for the spring-cloud-starter-parent which loads spring-boot-starter-parent 2.1.7
+
+```xml
+    <parent>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-parent</artifactId>
+        <version>Greenwich.SR3</version>
+        <relativePath/>
+    </parent>
+    
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+```
 
 `application.yml` for Eureka client 
 
