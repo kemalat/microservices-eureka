@@ -29,14 +29,11 @@ It is the off the shelf module provided by Netflix and fairly simply to make it 
 `application.yml` for Eureka Server :
 
 ```yml
+spring:
+  application:
+    name: eureka-server
 server:
   port: ${vcap.application.port:8761}
-
-
-logging:
-  level:
-    root: INFO
-    org.springframework: INFO
 
 eureka:
   client:
@@ -46,6 +43,13 @@ eureka:
     waitTimeInMsWhenSyncEmpty: 0
   instance:
     prefer-ip-address: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+
+
 ```
 
 ### Notes
@@ -77,10 +81,35 @@ When Eureka first starts up without peer Eureka servers, it waits for all client
 `application.yml` for Eureka client 
 
 ```yml
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
+
+server:
+  port: ${vcap.application.port:9999}
+
+spring:
+  application:
+    name: alert-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/alert_engine?autoReconnect=true&zeroDateTimeBehavior=convertToNull
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root12
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  mail:
+    host: mail.voidaint.com
+    port: 587
+    username: pars@voidaint.com
+    password: Pars123321
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
 
 # Service configs
 alert:
@@ -89,16 +118,14 @@ alert:
       seconds: 20
 
 mail:
-  from: mail@mail.com
-
-
+  from: notify@voidaint.com
 ---
-spring:
-  profiles: cloud
 eureka:
   instance:
-    hostname: ${APPLICATION_DOMAIN}
-    nonSecurePort: 8082
+    appname: ALERT-SERVICE
+  client:
+    serviceUrl:
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
 
 ```
 
