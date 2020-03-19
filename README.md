@@ -25,7 +25,8 @@ Netflix Feign is a declarative HTTP client which aims at simplifying HTTP API cl
     </dependencies>
 ```
 It is the off the shelf module provided by Netflix and fairly simply to make it running. 
-`application.yml` for Eureka Server is
+
+`application.yml` for Eureka Server :
 
 ```yml
 server:
@@ -57,4 +58,35 @@ When Eureka first starts up without peer Eureka servers, it waits for all client
 
 # Monitoring Micro Service as Eureka Client
 
+`application.yml` for Eureka client 
+
+```yml
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
+
+# Service configs
+alert:
+  process:
+    period:
+      seconds: 20
+
+mail:
+  from: mail@mail.com
+
+
+---
+spring:
+  profiles: cloud
+eureka:
+  instance:
+    hostname: ${APPLICATION_DOMAIN}
+    nonSecurePort: 8082
+
+```
+
+### Notes
+
+`defaultZone` is the fallback value that provides the service URL for any client that does not express a preference
 
